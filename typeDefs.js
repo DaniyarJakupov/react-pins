@@ -20,6 +20,12 @@ module.exports = gql`
     comments: [Comment]
   }
 
+  type Comment {
+    text: String
+    createdAt: String
+    author: User
+  }
+
   type Query {
     me: User
   }
