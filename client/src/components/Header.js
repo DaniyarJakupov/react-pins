@@ -1,12 +1,38 @@
-import React from "react";
+import React, { useContext } from "react";
 import { withStyles } from "@material-ui/core/styles";
-// import AppBar from "@material-ui/core/AppBar";
-// import Toolbar from "@material-ui/core/Toolbar";
-// import Map from "@material-ui/icons/Map";
-// import Typography from "@material-ui/core/Typography";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import MapIcon from "@material-ui/icons/Map";
+import Typography from "@material-ui/core/Typography";
+
+import AppContext from "../context";
 
 const Header = ({ classes }) => {
-  return <div>Header</div>;
+  const { state } = useContext(AppContext);
+  const { currentUser } = state;
+  return (
+    <div className={classes.root}>
+      <AppBar position="static">
+        <Toolbar>
+          <div className={classes.grow}>
+            <MapIcon className={classes.icon} />
+            <Typography component="h1" variant="h6" noWrap color="inherit">
+              ReactPins
+            </Typography>
+          </div>
+
+          {currentUser && (
+            <div className={classes.grow}>
+              <img src={currentUser.picture} alt={currentUser.name} className={classes.picture} />
+              <Typography variant="h5" noWrap color="inherit">
+                {currentUser.name}
+              </Typography>
+            </div>
+          )}
+        </Toolbar>
+      </AppBar>
+    </div>
+  );
 };
 
 const styles = theme => ({
