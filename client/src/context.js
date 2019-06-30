@@ -2,7 +2,8 @@ import { createContext } from "react";
 
 const AppContext = createContext({
   currentUser: null,
-  isAuth: false
+  isAuth: false,
+  draft: null
 });
 
 export default AppContext;
