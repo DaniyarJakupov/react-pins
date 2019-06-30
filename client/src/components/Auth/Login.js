@@ -18,6 +18,7 @@ const Login = ({ classes }) => {
       });
       let { me } = await client.request(ME_QUERY);
       dispatch({ type: "LOGIN_USER", payload: me });
+      dispatch({ type: "UPDATE_IS_AUTH", payload: googleUser.isSignedIn() });
     } catch (e) {
       onFailure(e);
     }
