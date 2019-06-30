@@ -25,7 +25,13 @@ const Login = ({ classes }) => {
     console.log({ response });
   };
 
-  return <GoogleLogin clientId="" onSuccess={onSuccess} isSignedIn={true} />;
+  return (
+    <GoogleLogin
+      clientId="539730108119-3ku7clq0lpq0tneolcugh7jrp266usi3.apps.googleusercontent.com"
+      onSuccess={onSuccess}
+      isSignedIn={true}
+    />
+  );
 };
 
 const styles = {
