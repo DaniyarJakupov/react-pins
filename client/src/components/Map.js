@@ -6,6 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import DeleteIcon from "@material-ui/icons/DeleteTwoTone";
 
 import PinIcon from "./PinIcon";
+import Blog from "./Blog";
 import AppContext from "../context";
 
 const init_viewport = {
@@ -73,6 +74,9 @@ const Map = ({ classes }) => {
           </Marker>
         )}
       </ReactMapGl>
+
+      {/* Blog area to add Pin Content */}
+      <Blog />
     </div>
   );
 };
