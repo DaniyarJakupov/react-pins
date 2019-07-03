@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import ReactMapGl, { NavigationControl, Marker } from "react-map-gl";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import DeleteIcon from "@material-ui/icons/DeleteTwoTone";
+// import Button from "@material-ui/core/Button";
+// import Typography from "@material-ui/core/Typography";
+// import DeleteIcon from "@material-ui/icons/DeleteTwoTone";
 
 import PinIcon from "./PinIcon";
 import Blog from "./Blog";
