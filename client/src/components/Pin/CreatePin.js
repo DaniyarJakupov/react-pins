@@ -7,6 +7,7 @@ import AddAPhotoIcon from "@material-ui/icons/AddAPhotoTwoTone";
 import LandscapeIcon from "@material-ui/icons/LandscapeOutlined";
 import ClearIcon from "@material-ui/icons/Clear";
 import SaveIcon from "@material-ui/icons/SaveTwoTone";
+import axios from "axios";
 
 import AppContext from "../../context";
 
@@ -25,8 +26,18 @@ const CreatePin = ({ classes }) => {
     dispatch({ type: "REMOVE_DRAFT" });
   };
 
-  const handleSubmit = e => {
+  const handleImageUpload = async () => {
+    const data = new FormData();
+    data.append("file", image);
+    data.append("upload_preset", "reactpins");
+    data.append("cloud_name", "dw8oigkhb");
+    const res = await axios.post("https://api.cloudinary.com/v1_1/dw8oigkhb/image/upload", data);
+    return res.data.url;
+  };
+
+  const handleSubmit = async e => {
     e.preventDefault();
+    const url = await handleImageUpload();
   };
 
   return (
