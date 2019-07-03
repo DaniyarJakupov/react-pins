@@ -8,15 +8,18 @@ import LandscapeIcon from "@material-ui/icons/LandscapeOutlined";
 import ClearIcon from "@material-ui/icons/Clear";
 import SaveIcon from "@material-ui/icons/SaveTwoTone";
 import axios from "axios";
+import { GraphQLClient } from "graphql-request";
 
 import AppContext from "../../context";
+import { CREATE_PIN_MUTATION } from "../../graphql/mutations";
 
 const CreatePin = ({ classes }) => {
-  const { dispatch } = useContext(AppContext);
+  const { dispatch, state } = useContext(AppContext);
 
   const [title, setTitle] = useState("");
   const [image, setImage] = useState("");
   const [content, setContent] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const handleDiscard = () => {
     setTitle("");
@@ -36,8 +39,33 @@ const CreatePin = ({ classes }) => {
   };
 
   const handleSubmit = async e => {
-    e.preventDefault();
-    const url = await handleImageUpload();
+    try {
+      e.preventDefault();
+      setSubmitting(true);
+      const imgUrl = await handleImageUpload();
+
+      const idToken = window.gapi.auth2
+        .getAuthInstance()
+        .currentUser.get()
+        .getAuthResponse().id_token;
+
+      const client = new GraphQLClient("http://localhost:4000/graphql", {
+        headers: { authorization: idToken }
+      });
+      const variables = {
+        title,
+        image: imgUrl,
+        content,
+        latitude: state.draft.latitude,
+        longitude: state.draft.longitude
+      };
+      const { createPin } = await client.request(CREATE_PIN_MUTATION, variables);
+      console.log("pin created", createPin);
+      handleDiscard();
+    } catch (e) {
+      setSubmitting(false);
+      console.error("error creating pin", e);
+    }
   };
 
   return (
@@ -88,7 +116,7 @@ const CreatePin = ({ classes }) => {
           className={classes.button}
           variant="contained"
           color="secondary"
-          disabled={!title.trim() || !image || !content.trim()}
+          disabled={!title.trim() || !image || !content.trim() || submitting}
           onClick={handleSubmit}
         >
           Submit
