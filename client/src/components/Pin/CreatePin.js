@@ -8,14 +8,14 @@ import LandscapeIcon from "@material-ui/icons/LandscapeOutlined";
 import ClearIcon from "@material-ui/icons/Clear";
 import SaveIcon from "@material-ui/icons/SaveTwoTone";
 import axios from "axios";
-import { GraphQLClient } from "graphql-request";
 
 import AppContext from "../../context";
 import { CREATE_PIN_MUTATION } from "../../graphql/mutations";
+import { useClient } from "../../graphql/client";
 
 const CreatePin = ({ classes }) => {
   const { dispatch, state } = useContext(AppContext);
-
+  const client = useClient(); // Custom hook that creates GraphQL client
   const [title, setTitle] = useState("");
   const [image, setImage] = useState("");
   const [content, setContent] = useState("");
@@ -43,15 +43,6 @@ const CreatePin = ({ classes }) => {
       e.preventDefault();
       setSubmitting(true);
       const imgUrl = await handleImageUpload();
-
-      const idToken = window.gapi.auth2
-        .getAuthInstance()
-        .currentUser.get()
-        .getAuthResponse().id_token;
-
-      const client = new GraphQLClient("http://localhost:4000/graphql", {
-        headers: { authorization: idToken }
-      });
       const variables = {
         title,
         image: imgUrl,
