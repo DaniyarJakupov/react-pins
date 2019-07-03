@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
@@ -8,7 +8,27 @@ import LandscapeIcon from "@material-ui/icons/LandscapeOutlined";
 import ClearIcon from "@material-ui/icons/Clear";
 import SaveIcon from "@material-ui/icons/SaveTwoTone";
 
+import AppContext from "../../context";
+
 const CreatePin = ({ classes }) => {
+  const { dispatch } = useContext(AppContext);
+
+  const [title, setTitle] = useState("");
+  const [image, setImage] = useState("");
+  const [content, setContent] = useState("");
+
+  const handleDiscard = () => {
+    setTitle("");
+    setImage("");
+    setContent("");
+
+    dispatch({ type: "REMOVE_DRAFT" });
+  };
+
+  const handleSubmit = e => {
+    e.preventDefault();
+  };
+
   return (
     <form className={classes.form}>
       <Typography className={classes.alignCenter} component="h2" variant="h4" color="secondary">
@@ -16,26 +36,50 @@ const CreatePin = ({ classes }) => {
       </Typography>
 
       <div>
-        <TextField name="title" label="title" placeholder="Enter pin title" />
-        <input id="image" accept="image/*" type="file" className={classes.input} />
+        <TextField name="title" label="title" placeholder="Enter pin title" onChange={e => setTitle(e.target.value)} />
+
+        <input
+          id="image"
+          accept="image/*"
+          type="file"
+          className={classes.input}
+          onChange={e => setImage(e.target.files[0])}
+        />
+
         <label htmlFor="image">
-          <Button component="span" size="small" className={classes.button}>
+          <Button component="span" size="small" className={classes.button} style={{ color: image && "green" }}>
             <AddAPhotoIcon />
           </Button>
         </label>
       </div>
 
       <div className={classes.contentField}>
-        <TextField name="content" label="content" multiline rows="6" margin="normal" fullWidth variant="outlined" />
+        <TextField
+          name="content"
+          label="content"
+          multiline
+          rows="6"
+          margin="normal"
+          fullWidth
+          variant="outlined"
+          onChange={e => setContent(e.target.value)}
+        />
       </div>
 
       <div>
-        <Button className={classes.button} variant="contained" color="primary">
+        <Button className={classes.button} variant="contained" color="primary" onClick={handleDiscard}>
           <ClearIcon className={classes.leftIcon} />
           Discard
         </Button>
 
-        <Button type="submit" className={classes.button} variant="contained" color="secondary">
+        <Button
+          type="submit"
+          className={classes.button}
+          variant="contained"
+          color="secondary"
+          disabled={!title.trim() || !image || !content.trim()}
+          onClick={handleSubmit}
+        >
           Submit
           <SaveIcon className={classes.rightIcon} />
         </Button>
