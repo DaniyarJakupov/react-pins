@@ -5,7 +5,7 @@ import AppContext from "../context";
 const PrivateRoute = ({ component: Comp, ...rest }) => {
   const { state } = useContext(AppContext);
 
-  return <Route {...rest} component={props => (state.isAuth ? <Comp {...props} /> : <Redirect to="/login" />)} />;
+  return <Route render={props => (!state.isAuth ? <Redirect to="/login" /> : <Comp {...props} />)} {...rest} />;
 };
 
 export default PrivateRoute;
