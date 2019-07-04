@@ -28,11 +28,11 @@ export const PIN_ADDED_SUB = gql`
 `;
 
 export const PIN_DELETED_SUB = gql`
-   subscription {
-      pinDeleted: {
-         _id
-      }
-   }
+  subscription {
+    pinDeleted {
+      _id
+    }
+  }
 `;
 
 export const PIN_UPDATED_SUB = gql`
