@@ -11,6 +11,7 @@ const authenticated = next => (root, args, ctx, info) => {
 module.exports = {
   Query: {
     me: authenticated((root, args, ctx, info) => ctx.currentUser),
+
     getPins: async (root, args, ctx) => {
       const pins = await Pin.find({})
         .populate("author")
@@ -24,6 +25,11 @@ module.exports = {
       const newPin = await new Pin({ ...args.input, author: ctx.currentUser._id }).save();
       const pinAdded = await Pin.populate(newPin, "author");
       return pinAdded;
+    }),
+
+    deletePin: authenticated(async (root, args, ctx) => {
+      const pin = await Pin.findOneAndDelete({ _id: args.pinId }).exec();
+      return pin;
     })
   }
 };
