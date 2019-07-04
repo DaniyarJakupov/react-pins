@@ -50,8 +50,7 @@ const CreatePin = ({ classes }) => {
         latitude: state.draft.latitude,
         longitude: state.draft.longitude
       };
-      const { createPin } = await client.request(CREATE_PIN_MUTATION, variables);
-      dispatch({ type: "CREATE_PIN", payload: createPin });
+      await client.request(CREATE_PIN_MUTATION, variables);
       handleDiscard();
     } catch (e) {
       setSubmitting(false);
@@ -66,7 +65,12 @@ const CreatePin = ({ classes }) => {
       </Typography>
 
       <div>
-        <TextField name="title" label="title" placeholder="Enter pin title" onChange={e => setTitle(e.target.value)} />
+        <TextField
+          name="title"
+          label="title"
+          placeholder="Enter pin title"
+          onChange={e => setTitle(e.target.value)}
+        />
 
         <input
           id="image"
@@ -77,7 +81,12 @@ const CreatePin = ({ classes }) => {
         />
 
         <label htmlFor="image">
-          <Button component="span" size="small" className={classes.button} style={{ color: image && "green" }}>
+          <Button
+            component="span"
+            size="small"
+            className={classes.button}
+            style={{ color: image && "green" }}
+          >
             <AddAPhotoIcon />
           </Button>
         </label>
@@ -97,7 +106,12 @@ const CreatePin = ({ classes }) => {
       </div>
 
       <div>
-        <Button className={classes.button} variant="contained" color="primary" onClick={handleDiscard}>
+        <Button
+          className={classes.button}
+          variant="contained"
+          color="primary"
+          onClick={handleDiscard}
+        >
           <ClearIcon className={classes.leftIcon} />
           Discard
         </Button>

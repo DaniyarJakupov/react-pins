@@ -12,13 +12,12 @@ import { useClient } from "../../graphql/client";
 
 const CreateComment = ({ classes }) => {
   const client = useClient();
-  const { state, dispatch } = useContext(AppContext);
+  const { state } = useContext(AppContext);
   const [comment, setComment] = useState("");
 
   const handleCommentSubmit = async () => {
     const variables = { pinId: state.currentPin._id, text: comment };
-    const { createComment } = await client.request(CREATE_COMMENT_MUTATION, variables);
-    dispatch({ type: "CREATE_COMMENT", payload: createComment });
+    await client.request(CREATE_COMMENT_MUTATION, variables);
     setComment("");
   };
 
