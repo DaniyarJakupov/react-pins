@@ -35,10 +35,10 @@ module.exports = {
     }),
 
     deletePin: authenticated(async (root, args, ctx) => {
-      const deletedPin = await Pin.findOneAndDelete({ _id: args.pinId }).exec();
+      const pinDeleted = await Pin.findOneAndDelete({ _id: args.pinId }).exec();
       /* Publish to pubsub */
-      pubsub.publish(PIN_DELETED, { deletedPin });
-      return deletedPin;
+      pubsub.publish(PIN_DELETED, { pinDeleted });
+      return pinDeleted;
     }),
 
     createComment: authenticated(async (root, args, ctx) => {
