@@ -27,11 +27,18 @@ const Login = ({ classes }) => {
 
   const onFailure = err => {
     console.error(`Error logging in, ${err}`);
+    dispatch({ type: "UPDATE_IS_AUTH", payload: false });
   };
 
   return (
     <div className={classes.root}>
-      <Typography component="h1" variant="h3" gutterBottom noWrap style={{ color: "rgb(66, 133, 244)" }}>
+      <Typography
+        component="h1"
+        variant="h3"
+        gutterBottom
+        noWrap
+        style={{ color: "rgb(66, 133, 244)" }}
+      >
         Welcome to ReactPins!
       </Typography>
       <GoogleLogin
