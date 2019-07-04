@@ -8,12 +8,14 @@ import LandscapeIcon from "@material-ui/icons/LandscapeOutlined";
 import ClearIcon from "@material-ui/icons/Clear";
 import SaveIcon from "@material-ui/icons/SaveTwoTone";
 import axios from "axios";
+import { unstable_useMediaQuery as useMediaQuery } from "@material-ui/core/useMediaQuery";
 
 import AppContext from "../../context";
 import { CREATE_PIN_MUTATION } from "../../graphql/mutations";
 import { useClient } from "../../graphql/client";
 
 const CreatePin = ({ classes }) => {
+  const mobileSize = useMediaQuery("(max-width: 650px)");
   const { dispatch, state } = useContext(AppContext);
   const client = useClient(); // Custom hook that creates GraphQL client
   const [title, setTitle] = useState("");
@@ -97,7 +99,7 @@ const CreatePin = ({ classes }) => {
           name="content"
           label="content"
           multiline
-          rows="6"
+          rows={mobileSize ? "3" : "6"}
           margin="normal"
           fullWidth
           variant="outlined"

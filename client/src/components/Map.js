@@ -6,6 +6,7 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import DeleteIcon from "@material-ui/icons/DeleteTwoTone";
 import { Subscription } from "react-apollo";
+import { unstable_useMediaQuery as useMediaQuery } from "@material-ui/core/useMediaQuery";
 
 import PinIcon from "./PinIcon";
 import Blog from "./Blog";
@@ -22,6 +23,7 @@ const init_viewport = {
 };
 
 const Map = ({ classes }) => {
+  const mobileSize = useMediaQuery("(max-width: 650px)");
   const { state, dispatch } = useContext(AppContext);
   const [viewport, setViewport] = useState(init_viewport);
   const [userPosition, setUserPosition] = useState(null);
@@ -86,7 +88,7 @@ const Map = ({ classes }) => {
   /* =============================== */
 
   return (
-    <div className={classes.root}>
+    <div className={mobileSize ? classes.rootMobile : classes.root}>
       <ReactMapGl
         width="100vw"
         height="calc(100vh - 64px)"
@@ -94,6 +96,7 @@ const Map = ({ classes }) => {
         mapboxApiAccessToken="pk.eyJ1IjoiZGFuaXlhci1qYWt1cG92IiwiYSI6ImNqZ3AzZTRkcTBiN3Uyd3MwbWxlbjhwZzEifQ.zcgZLLrfzJq7XleAUid6oA"
         onViewportChange={newViewport => setViewport(newViewport)}
         onClick={handleMapClick}
+        scrollZoom={!mobileSize}
         {...viewport}
       >
         {/* Navigation Control */}
