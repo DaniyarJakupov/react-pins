@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
 import { withStyles } from "@material-ui/core/styles";
-import ReactMapGl, { NavigationControl, Marker } from "react-map-gl";
+import ReactMapGl, { NavigationControl, Marker, Popup } from "react-map-gl";
 import differenceInMinutes from "date-fns/difference_in_minutes";
 // import Button from "@material-ui/core/Button";
-// import Typography from "@material-ui/core/Typography";
+import Typography from "@material-ui/core/Typography";
 // import DeleteIcon from "@material-ui/icons/DeleteTwoTone";
 
 import PinIcon from "./PinIcon";
@@ -22,6 +22,7 @@ const Map = ({ classes }) => {
   const { state, dispatch } = useContext(AppContext);
   const [viewport, setViewport] = useState(init_viewport);
   const [userPosition, setUserPosition] = useState(null);
+  const [popup, setPopup] = useState(null);
   const client = useClient();
 
   /* =============================== */
@@ -63,6 +64,11 @@ const Map = ({ classes }) => {
     return isNewPin ? "rebeccapurple" : "darkblue";
   };
   /* =============================== */
+  const handleSelectPin = pin => {
+    setPopup(pin);
+    dispatch({ type: "SET_PIN", payload: pin });
+  };
+  /* =============================== */
 
   return (
     <div className={classes.root}>
@@ -98,9 +104,28 @@ const Map = ({ classes }) => {
         {state.pins &&
           state.pins.map(pin => (
             <Marker key={pin._id} latitude={pin.latitude} longitude={pin.longitude} offsetLeft={-19} offsetTop={-37}>
-              <PinIcon color={highlightNewPin(pin)} size={40} />
+              <PinIcon color={highlightNewPin(pin)} size={40} onClick={() => handleSelectPin(pin)} />
             </Marker>
           ))}
+
+        {/* Popup Area */}
+        {popup && (
+          <Popup
+            anchor="top"
+            latitude={popup.latitude}
+            longitude={popup.longitude}
+            closeOnClick={false}
+            onClose={() => setPopup(null)}
+          >
+            <img className={classes.popupImage} src={popup.image} alt={popup.title} />
+
+            <div className={classes.popupTab}>
+              <Typography>
+                {popup.latitude.toFixed(6)}, {popup.longitude.toFixed(6)}
+              </Typography>
+            </div>
+          </Popup>
+        )}
       </ReactMapGl>
 
       {/* Blog area to add Pin Content */}
