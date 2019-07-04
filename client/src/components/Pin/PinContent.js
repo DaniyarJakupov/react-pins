@@ -6,6 +6,8 @@ import FaceIcon from "@material-ui/icons/Face";
 import format from "date-fns/format";
 
 import AppContext from "../../context";
+import Comments from "../Comment/Comments";
+import CreateComment from "../Comment/CreateComment";
 
 const PinContent = ({ classes }) => {
   const {
@@ -29,6 +31,10 @@ const PinContent = ({ classes }) => {
       <Typography variant="subtitle1" gutterBottom>
         {currentPin.content}
       </Typography>
+
+      {/* Pin Comments */}
+      <CreateComment />
+      <Comments comments={currentPin.comments} />
     </div>
   );
 };
