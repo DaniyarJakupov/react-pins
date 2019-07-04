@@ -5,6 +5,7 @@ import differenceInMinutes from "date-fns/difference_in_minutes";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import DeleteIcon from "@material-ui/icons/DeleteTwoTone";
+import { Subscription } from "react-apollo";
 
 import PinIcon from "./PinIcon";
 import Blog from "./Blog";
@@ -12,6 +13,7 @@ import AppContext from "../context";
 import { useClient } from "../graphql/client";
 import { GET_PINS_QUERY } from "../graphql/queries";
 import { DELETE_PIN_MUTATION } from "../graphql/mutations";
+import { PIN_ADDED_SUB, PIN_DELETED_SUB, PIN_UPDATED_SUB } from "../graphql/subscriptions";
 
 const init_viewport = {
   latitude: 37.7577,
@@ -75,8 +77,7 @@ const Map = ({ classes }) => {
   const handlePinDelete = async pin => {
     try {
       const variables = { pinId: pin._id };
-      const { deletePin } = await client.request(DELETE_PIN_MUTATION, variables);
-      dispatch({ type: "DELETE_PIN", payload: deletePin });
+      await client.request(DELETE_PIN_MUTATION, variables);
       setPopup(null);
     } catch (e) {
       console.error("Error while deleting pin", e);
@@ -102,14 +103,24 @@ const Map = ({ classes }) => {
 
         {/* Pin for User's Current Position */}
         {userPosition && (
-          <Marker latitude={userPosition.latitude} longitude={userPosition.longitude} offsetLeft={-19} offsetTop={-37}>
+          <Marker
+            latitude={userPosition.latitude}
+            longitude={userPosition.longitude}
+            offsetLeft={-19}
+            offsetTop={-37}
+          >
             <PinIcon color="crimson" size={40} />
           </Marker>
         )}
 
         {/* Draft Pin */}
         {state.draft && (
-          <Marker latitude={state.draft.latitude} longitude={state.draft.longitude} offsetLeft={-19} offsetTop={-37}>
+          <Marker
+            latitude={state.draft.latitude}
+            longitude={state.draft.longitude}
+            offsetLeft={-19}
+            offsetTop={-37}
+          >
             <PinIcon color="hotpink" size={40} />
           </Marker>
         )}
@@ -117,8 +128,18 @@ const Map = ({ classes }) => {
         {/* Created Pins */}
         {state.pins &&
           state.pins.map(pin => (
-            <Marker key={pin._id} latitude={pin.latitude} longitude={pin.longitude} offsetLeft={-19} offsetTop={-37}>
-              <PinIcon color={highlightNewPin(pin)} size={40} onClick={() => handleSelectPin(pin)} />
+            <Marker
+              key={pin._id}
+              latitude={pin.latitude}
+              longitude={pin.longitude}
+              offsetLeft={-19}
+              offsetTop={-37}
+            >
+              <PinIcon
+                color={highlightNewPin(pin)}
+                size={40}
+                onClick={() => handleSelectPin(pin)}
+              />
             </Marker>
           ))}
 
@@ -147,6 +168,31 @@ const Map = ({ classes }) => {
           </Popup>
         )}
       </ReactMapGl>
+
+      {/* Subscription for Pins */}
+      <Subscription
+        subscription={PIN_ADDED_SUB}
+        onSubscriptionData={({ subscriptionData }) => {
+          const { pinAdded } = subscriptionData.data;
+          dispatch({ type: "CREATE_PIN", payload: pinAdded });
+        }}
+      />
+
+      <Subscription
+        subscription={PIN_DELETED_SUB}
+        onSubscriptionData={({ subscriptionData }) => {
+          const { pinDeleted } = subscriptionData.data;
+          dispatch({ type: "DELETE_PIN", payload: pinDeleted });
+        }}
+      />
+
+      <Subscription
+        subscription={PIN_UPDATED_SUB}
+        onSubscriptionData={({ subscriptionData }) => {
+          const { pinUpdated } = subscriptionData.data;
+          dispatch({ type: "CREATE_COMMENT", payload: pinUpdated });
+        }}
+      />
 
       {/* Blog area to add Pin Content */}
       <Blog />
