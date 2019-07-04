@@ -2,9 +2,9 @@ import React, { useState, useEffect, useContext } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import ReactMapGl, { NavigationControl, Marker, Popup } from "react-map-gl";
 import differenceInMinutes from "date-fns/difference_in_minutes";
-// import Button from "@material-ui/core/Button";
+import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-// import DeleteIcon from "@material-ui/icons/DeleteTwoTone";
+import DeleteIcon from "@material-ui/icons/DeleteTwoTone";
 
 import PinIcon from "./PinIcon";
 import Blog from "./Blog";
@@ -68,6 +68,8 @@ const Map = ({ classes }) => {
     setPopup(pin);
     dispatch({ type: "SET_PIN", payload: pin });
   };
+
+  const isAuthUser = () => state.currentUser._id === popup.author._id;
   /* =============================== */
 
   return (
@@ -123,6 +125,12 @@ const Map = ({ classes }) => {
               <Typography>
                 {popup.latitude.toFixed(6)}, {popup.longitude.toFixed(6)}
               </Typography>
+
+              {isAuthUser() && (
+                <Button>
+                  <DeleteIcon className={classes.deleteIcon} />
+                </Button>
+              )}
             </div>
           </Popup>
         )}
